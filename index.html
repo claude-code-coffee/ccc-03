@@ -171,6 +171,16 @@ body.admin .sum .host{display:block}
 .miss{margin:.8rem 0 0;font-size:.85rem;color:var(--grey)}
 .miss b{font-weight:700;color:var(--ink)}
 
+/* 플로팅 : 사전답변이 화면 밖일 때만 */
+.fab{
+  position:fixed;right:1.5rem;bottom:1.5rem;z-index:10;
+  background:var(--ink);color:var(--paper);text-decoration:none;
+  font-weight:700;font-size:.9rem;letter-spacing:-.01em;padding:.8rem 1.2rem;
+}
+.fab:hover{background:var(--red)}
+.fab:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+#answers{scroll-margin-top:1.5rem}
+
 /* start time */
 .setter{
   background:var(--ink);color:var(--paper);padding:1.3rem 1.5rem;margin-top:5rem;
@@ -287,8 +297,9 @@ footer span:first-child{color:var(--red)}
     </div>
   </header>
 
-  <!-- 모인 답변 -->
-  <h2>모인 답변 <span id="rosterCount">&nbsp;</span></h2>
+  <!-- 사전답변 -->
+  <div id="answers">
+  <h2>사전답변 <span id="rosterCount">&nbsp;</span></h2>
   <div class="tabs" role="tablist">
     <button type="button" data-tab="person" aria-pressed="true">참여자별</button>
     <button type="button" data-tab="q" aria-pressed="false">질문별</button>
@@ -296,6 +307,8 @@ footer span:first-child{color:var(--red)}
   <p class="err" id="err" hidden></p>
   <div class="roster" id="roster"><p class="empty">아직 등록된 분이 없습니다.</p></div>
   <div class="byq" id="byq" hidden></div>
+  </div>
+  <a class="fab" id="fab" href="#answers" hidden>사전답변 ↑</a>
 
   <!-- 진행 -->
   <div class="setter">
@@ -330,7 +343,7 @@ footer span:first-child{color:var(--red)}
       <ul class="todo">
         <li><label><input type="checkbox"><span class="t">한 분당 2~3분, 이름을 부르면 시작</span></label></li>
         <li><label><input type="checkbox"><span class="t">닉네임 / 하는 일 / 자동화하고 싶은 일</span></label></li>
-        <li><label><input type="checkbox"><span class="t">나머지는 「모인 답변」에 있으니 넘어가도 괜찮아요</span></label></li>
+        <li><label><input type="checkbox"><span class="t">나머지는 「사전답변」에 있으니 넘어가도 괜찮아요</span></label></li>
       </ul>
       <p>사전질문에 써주신 건 미리 다 읽었어요. <strong>자동화하고 싶은 일</strong> 위주로 말씀해주세요.</p>
       <div class="cue">
@@ -602,6 +615,13 @@ function setTab(t){
 }
 tabBtns.forEach(function(b){ b.addEventListener('click', function(){ setTab(b.dataset.tab); }); });
 setTab(ls('tab') === 'q' ? 'q' : 'person');
+
+/* 플로팅 버튼 */
+(function(){
+  var sec = $('answers'), fab = $('fab');
+  if(!('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function(es){ fab.hidden = es[0].isIntersecting; }).observe(sec);
+})();
 
 /* 시작 시각 */
 (function(){
