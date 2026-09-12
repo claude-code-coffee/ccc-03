@@ -164,6 +164,8 @@ h2 span{color:var(--red)}
 .sum p:last-child{margin-bottom:0}
 .sum .host{display:none;font-style:italic;color:var(--red);font-weight:400}
 body.admin .sum .host{display:block}
+.miss{margin:.8rem 0 0;font-size:.85rem;color:var(--grey)}
+.miss b{font-weight:700;color:var(--ink)}
 
 /* start time */
 .setter{
@@ -528,6 +530,12 @@ function sumHtml(key){
     '</div>';
 }
 
+function missHtml(key){
+  var names = rows.filter(function(r){ return !r[key]; }).map(function(r){ return esc(r.nickname); });
+  if(!names.length) return '';
+  return '<p class="miss"><b>미응답 ' + names.length + '명</b> : ' + names.join(', ') + '</p>';
+}
+
 var POLLS = [['클로드는 어디까지', LEVELS, 'level'], ['구독', PLANS, 'plan'], ['컴퓨터', OSES, 'os']];
 var TEXTS = [['하는 일','work'], ['요즘 클로드로 하는 일','usage'], ['막히는 것, 아쉬운 것','stuck'],
              ['반복하느라 지겨운 일, 엄두가 안 났던 것','want',true], ['밋업에서 물어보고 싶은 것','ask']];
@@ -535,13 +543,13 @@ var TEXTS = [['하는 일','work'], ['요즘 클로드로 하는 일','usage'], 
 function drawByQ(){
   if(!rows.length){ $('byq').innerHTML = '<p class="empty">아직 등록된 분이 없습니다.</p>'; return; }
   var html = POLLS.map(function(p){
-    return '<div class="qb"><p class="qt">' + p[0] + '</p>' + sumHtml(p[2]) + '<div class="res">' + resHtml(p[1], p[2]) + '</div></div>';
+    return '<div class="qb"><p class="qt">' + p[0] + '</p>' + sumHtml(p[2]) + '<div class="res">' + resHtml(p[1], p[2]) + '</div>' + missHtml(p[2]) + '</div>';
   }).join('');
   html += TEXTS.map(function(t){
     var items = rows.filter(function(r){ return r[t[1]]; });
     return '<div class="qb' + (t[2] ? ' key' : '') + '"><p class="qt">' + t[0] + ' <span>' + items.length + '명</span></p>' + sumHtml(t[1]) + '<dl>' +
       items.map(function(r){ return '<dt>' + esc(r.nickname) + '</dt><dd>' + esc(r[t[1]]) + '</dd>'; }).join('') +
-      '</dl></div>';
+      '</dl>' + missHtml(t[1]) + '</div>';
   }).join('');
   $('byq').innerHTML = html;
 }
