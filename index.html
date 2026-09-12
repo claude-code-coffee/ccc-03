@@ -343,7 +343,7 @@ footer span:first-child{color:var(--red)}
       <ul class="todo">
         <li><label><input type="checkbox"><span class="t">한 분당 2~3분, 이름을 부르면 시작</span></label></li>
         <li><label><input type="checkbox"><span class="t">닉네임 / 하는 일 / 자동화하고 싶은 일</span></label></li>
-        <li><label><input type="checkbox"><span class="t">나머지는 「사전답변」에 있으니 넘어가도 괜찮아요</span></label></li>
+        <li><label><input type="checkbox"><span class="t">나머지는 사전답변에 있으니 넘어가도 괜찮아요</span></label></li>
       </ul>
       <p>사전질문에 써주신 건 미리 다 읽었어요. <strong>자동화하고 싶은 일</strong> 위주로 말씀해주세요.</p>
       <div class="cue">
@@ -361,7 +361,7 @@ footer span:first-child{color:var(--red)}
     <div class="col-body">
       <h3>쉬는 시간</h3>
       <ul class="todo">
-        <li><label><input type="checkbox"><span class="t">「질문별」 탭 둘러보면서 나랑 비슷한 고민 찾아보기</span></label></li>
+        <li><label><input type="checkbox"><span class="t">질문별 탭 둘러보면서 나랑 비슷한 고민 찾아보기</span></label></li>
       </ul>
     </div>
   </section>
@@ -371,7 +371,7 @@ footer span:first-child{color:var(--red)}
     <div class="col-body">
       <h3>주제별 이야기</h3>
       <ul class="todo">
-        <li><label><input type="checkbox"><span class="t">「질문별」 탭의 「막히는 것」에서 겹치는 고민을 주제로</span></label></li>
+        <li><label><input type="checkbox"><span class="t">질문별 탭의 막히는 것에서 겹치는 고민을 주제로</span></label></li>
         <li><label><input type="checkbox"><span class="t">주제마다 해당하는 분 2, 3명이 고민 이야기</span></label></li>
         <li><label><input type="checkbox"><span class="t">비슷한 경험 있는 분은 이어서 이야기</span></label></li>
         <li><label><input type="checkbox"><span class="t">못 다룬 개인 질문은 #질문-정보에</span></label></li>
@@ -391,12 +391,12 @@ footer span:first-child{color:var(--red)}
       <ul class="todo">
         <li><label><input type="checkbox"><span class="t">주제에 안 들어간 이야기, 아무거나</span></label></li>
         <li><label><input type="checkbox"><span class="t">오늘 들은 이야기 중 더 듣고 싶은 것</span></label></li>
-        <li><label><input type="checkbox"><span class="t">「밋업에서 물어보고 싶은 것」에 남은 질문</span></label></li>
+        <li><label><input type="checkbox"><span class="t">밋업에서 물어보고 싶은 것에 남은 질문</span></label></li>
       </ul>
       <div class="cue">
         <span class="lbl">진행자 대본 / 자유 이야기</span>
         <p>주제로 못 묶은 이야기들 지금 하시면 돼요. 아까 다른 분 이야기 듣다가 궁금해진 것도 좋고요.</p>
-        <p class="stage">(조용하면 「밋업에서 물어보고 싶은 것」 답변 중 안 다룬 걸 꺼내기)</p>
+        <p class="stage">(조용하면 밋업에서 물어보고 싶은 것 답변 중 안 다룬 걸 꺼내기)</p>
       </div>
     </div>
   </section>
@@ -471,7 +471,7 @@ function load(){
 }
 
 function remove(id, nickname){
-  if(!window.confirm('「' + nickname + '」 답변을 삭제할까요?')) return;
+  if(!window.confirm(nickname + ' 답변을 삭제할까요?')) return;
   fetch(API + '?id=eq.' + encodeURIComponent(id), { method:'DELETE', headers:H })
     .then(function(r){ if(!r.ok) throw new Error('삭제 실패 ' + r.status); ok(); return load(); })
     .catch(function(e){ fail(e.message); });
