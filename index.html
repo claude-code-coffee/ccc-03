@@ -159,7 +159,9 @@ h2 span{color:var(--red)}
 .byq dt{font-weight:700;letter-spacing:-.01em}
 .byq dd{margin:0;font-weight:500}
 .byq .qb.key dd{font-weight:700}
-.sum{border:2px solid var(--ink);padding:.9rem 1.1rem 1rem;margin:0 0 1.1rem;max-width:36rem}
+.byq .cols{display:grid;grid-template-columns:7fr 5fr;column-gap:2.5rem;align-items:start}
+.byq .cols .res{max-width:none}
+.sum{margin:0;padding-top:.15rem}
 .sum p{margin:0 0 .35rem;font-size:.92rem;font-weight:500;line-height:1.55}
 .sum p:last-child{margin-bottom:0}
 .sum .host{display:none;font-style:italic;color:var(--red);font-weight:400}
@@ -237,6 +239,7 @@ footer span:first-child{color:var(--red)}
   .elapsed{font-size:2.3rem}
   .block h3{font-size:1.6rem}
   .roster dl,.byq dl{grid-template-columns:1fr}
+  .byq .cols{grid-template-columns:1fr;row-gap:1.2rem}
   .roster dt{padding-top:.5rem}
   .byq dt{margin-top:.4rem}
   .byq dl>dt:first-child{margin-top:0}
@@ -483,11 +486,16 @@ function drawRoster(){
 /* 요약. pub은 모두에게, host는 진행자 모드에서만 */
 var SUM = {
   level: {
-    pub: ['채팅만 4명, 파일 올려서 시켜보는 단계 2명, 클로드 코드 설치 2명, 곧잘 쓰는 사람 2명.',
-          '구독은 Pro 6명이 중심. 무료 2명, Max 2명.',
-          '컴퓨터는 윈도우 9명, 맥 1명.'],
-    host: ['절반이 채팅 단계. 클로드 코드는 오늘 보여주는 것만으로도 새롭다.',
-           '다음 실습은 윈도우 기준으로 짜야 한다.']
+    pub: ['채팅만 4명, 파일 올려서 시켜보는 단계 2명, 클로드 코드 설치 2명, 곧잘 쓰는 사람 2명.'],
+    host: ['절반이 채팅 단계. 클로드 코드는 오늘 보여주는 것만으로도 새롭다.']
+  },
+  plan: {
+    pub: ['Pro 6명이 중심. 무료 2명, Max 2명.'],
+    host: ['무료 2명(풀잎, 마음)은 클로드 코드를 못 쓴다. 실습 전에 구독 안내 필요.']
+  },
+  os: {
+    pub: ['윈도우 9명, 맥 1명.'],
+    host: ['다음 실습은 윈도우 기준으로 짜야 한다. 맥은 치트 한 명.']
   },
   work: {
     pub: ['개발 2명, 웹/기획 2명, 사무직 4명(회계, 경영지원, 계획수립, 기술영업), 자영업 1명, 이직 준비 1명.',
@@ -543,13 +551,13 @@ var TEXTS = [['하는 일','work'], ['요즘 클로드로 하는 일','usage'], 
 function drawByQ(){
   if(!rows.length){ $('byq').innerHTML = '<p class="empty">아직 등록된 분이 없습니다.</p>'; return; }
   var html = POLLS.map(function(p){
-    return '<div class="qb"><p class="qt">' + p[0] + '</p>' + sumHtml(p[2]) + '<div class="res">' + resHtml(p[1], p[2]) + '</div>' + missHtml(p[2]) + '</div>';
+    return '<div class="qb"><p class="qt">' + p[0] + '</p><div class="cols"><div><div class="res">' + resHtml(p[1], p[2]) + '</div>' + missHtml(p[2]) + '</div>' + sumHtml(p[2]) + '</div></div>';
   }).join('');
   html += TEXTS.map(function(t){
     var items = rows.filter(function(r){ return r[t[1]]; });
-    return '<div class="qb' + (t[2] ? ' key' : '') + '"><p class="qt">' + t[0] + ' <span>' + items.length + '명</span></p>' + sumHtml(t[1]) + '<dl>' +
+    return '<div class="qb' + (t[2] ? ' key' : '') + '"><p class="qt">' + t[0] + ' <span>' + items.length + '명</span></p><div class="cols"><div><dl>' +
       items.map(function(r){ return '<dt>' + esc(r.nickname) + '</dt><dd>' + esc(r[t[1]]) + '</dd>'; }).join('') +
-      '</dl>' + missHtml(t[1]) + '</div>';
+      '</dl>' + missHtml(t[1]) + '</div>' + sumHtml(t[1]) + '</div></div>';
   }).join('');
   $('byq').innerHTML = html;
 }
