@@ -159,7 +159,9 @@ h2 span{color:var(--red)}
 .byq dt{font-weight:700;letter-spacing:-.01em}
 .byq dd{margin:0;font-weight:500}
 .byq .qb.key dd{font-weight:700}
-.byq .cols{display:grid;grid-template-columns:7fr 5fr;column-gap:2.5rem;align-items:start}
+.byq .cols{display:grid;grid-template-columns:repeat(12,1fr);column-gap:1.5rem;align-items:start}
+.byq .cols>.sum{grid-column:1 / span 4}
+.byq .cols>.data{grid-column:5 / span 8}
 .byq .cols .res{max-width:none}
 .sum{margin:0;padding-top:.15rem}
 .sum p{margin:0 0 .35rem;font-size:.92rem;font-weight:500;line-height:1.55}
@@ -239,7 +241,8 @@ footer span:first-child{color:var(--red)}
   .elapsed{font-size:2.3rem}
   .block h3{font-size:1.6rem}
   .roster dl,.byq dl{grid-template-columns:1fr}
-  .byq .cols{grid-template-columns:1fr;row-gap:1.2rem}
+  .byq .cols>.sum,.byq .cols>.data{grid-column:1 / -1}
+  .byq .cols{row-gap:1.2rem}
   .roster dt{padding-top:.5rem}
   .byq dt{margin-top:.4rem}
   .byq dl>dt:first-child{margin-top:0}
@@ -531,7 +534,7 @@ var SUM = {
   }
 };
 function sumHtml(key){
-  var m = SUM[key]; if(!m) return '';
+  var m = SUM[key]; if(!m) return '<div class="sum"></div>';
   return '<div class="sum">' +
     m.pub.map(function(t){ return '<p>' + esc(t) + '</p>'; }).join('') +
     m.host.map(function(t){ return '<p class="host">' + esc(t) + '</p>'; }).join('') +
@@ -551,13 +554,13 @@ var TEXTS = [['하는 일','work'], ['요즘 클로드로 하는 일','usage'], 
 function drawByQ(){
   if(!rows.length){ $('byq').innerHTML = '<p class="empty">아직 등록된 분이 없습니다.</p>'; return; }
   var html = POLLS.map(function(p){
-    return '<div class="qb"><p class="qt">' + p[0] + '</p><div class="cols"><div><div class="res">' + resHtml(p[1], p[2]) + '</div>' + missHtml(p[2]) + '</div>' + sumHtml(p[2]) + '</div></div>';
+    return '<div class="qb"><p class="qt">' + p[0] + '</p><div class="cols">' + sumHtml(p[2]) + '<div class="data"><div class="res">' + resHtml(p[1], p[2]) + '</div>' + missHtml(p[2]) + '</div></div></div>';
   }).join('');
   html += TEXTS.map(function(t){
     var items = rows.filter(function(r){ return r[t[1]]; });
-    return '<div class="qb' + (t[2] ? ' key' : '') + '"><p class="qt">' + t[0] + ' <span>' + items.length + '명</span></p><div class="cols"><div><dl>' +
+    return '<div class="qb' + (t[2] ? ' key' : '') + '"><p class="qt">' + t[0] + ' <span>' + items.length + '명</span></p><div class="cols">' + sumHtml(t[1]) + '<div class="data"><dl>' +
       items.map(function(r){ return '<dt>' + esc(r.nickname) + '</dt><dd>' + esc(r[t[1]]) + '</dd>'; }).join('') +
-      '</dl>' + missHtml(t[1]) + '</div>' + sumHtml(t[1]) + '</div></div>';
+      '</dl>' + missHtml(t[1]) + '</div></div></div>';
   }).join('');
   $('byq').innerHTML = html;
 }
