@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[CCC-03] 화상밋업 : 클로드.. 어떻게 쓰세요?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=M+PLUS+U:wght@700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+:root{
+  color-scheme:only light;
+  --paper:#E8E7E4;
+  --ink:#131313;
+  --red:#E0231A;
+  --grey:#8A8987;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans KR","Archivo","Apple SD Gothic Neo",system-ui,sans-serif;
+  font-weight:400;font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased;
+  word-break:keep-all;
+}
+.wrap{max-width:64rem;margin:0 auto;padding:0 2rem 7rem}
+
+.row{display:grid;grid-template-columns:repeat(12,1fr);column-gap:1.5rem}
+.col-time{grid-column:1 / span 3}
+.col-body{grid-column:4 / span 8}
+
+.lbl{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;
+  font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--red);
+}
+strong{font-weight:700}
+
+/* hero : 화상밋업 약속 */
+.hero{
+  padding:2.5rem 0 3rem;border-bottom:4px solid var(--ink);
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:end;
+}
+.htxt .lbl{display:block;margin-bottom:1.1rem}
+.hname{
+  margin:0;font-family:"M PLUS U",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-weight:800;font-size:clamp(1.5rem,5.2vw,3.4rem);
+  line-height:1.02;letter-spacing:-.045em;
+}
+.hname em{font-style:normal;color:var(--red)}
+.steps{list-style:none;margin:0;padding:0;counter-reset:st;border-top:1px solid var(--ink)}
+.steps li{
+  counter-increment:st;display:grid;grid-template-columns:2.4rem 1fr;
+  font-size:1.15rem;font-weight:700;letter-spacing:-.02em;
+  padding:.7rem 0;border-bottom:1px solid var(--ink);
+}
+.steps li::before{
+  content:counter(st,decimal-leading-zero);
+  font-family:"Archivo",system-ui,sans-serif;font-variant-numeric:tabular-nums;
+  font-weight:700;font-size:.68rem;color:var(--red);padding-top:.5rem;letter-spacing:.08em;
+}
+
+/* admin */
+.adminbar{
+  background:var(--red);color:var(--paper);margin:0 -2rem;padding:.8rem 2rem;
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-size:.62rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+.del{
+  background:transparent;color:var(--red);border:2px solid var(--red);cursor:pointer;
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-size:.58rem;
+  letter-spacing:.18em;text-transform:uppercase;padding:.35rem .7rem;margin-top:.7rem;
+}
+.del:hover{background:var(--red);color:var(--paper)}
+.del:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+
+/* 진행자 대본 : 진행자 모드에서만 */
+.cue{display:none;margin:1.7rem 0;max-width:36rem;padding:1rem 0 1.1rem;
+  border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+body.admin .cue{display:block}
+.cue .lbl{display:block;margin-bottom:.7rem}
+.cue p{font-size:1.06rem;font-weight:500;line-height:1.6;margin:0 0 .65rem;max-width:none}
+.cue p:last-child{margin-bottom:0}
+.cue .stage{font-size:.9rem;font-weight:400;color:var(--grey)}
+
+/* masthead */
+.mast{padding:3rem 0 0}
+.mast>.lbl{display:block;margin-bottom:2.5rem}
+.mastgrid{align-items:end;row-gap:2rem}
+.headline{grid-column:1 / span 8}
+h1{font-weight:900;font-size:clamp(1.8rem,5.4vw,3.9rem);line-height:1.02;letter-spacing:-.05em;margin:0;white-space:nowrap}
+h1 em{font-style:normal;color:var(--red)}
+.panel{
+  grid-column:9 / span 4;background:var(--red);color:var(--paper);
+  padding:1.6rem 1.5rem;align-self:stretch;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.panel dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:1.2rem .8rem}
+.panel dl>div.wide{grid-column:1 / -1}
+.panel dt{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-size:.55rem;
+  letter-spacing:.2em;text-transform:uppercase;opacity:.75;margin:0 0 .2rem;
+}
+.panel dd{margin:0;font-weight:900;font-size:1.5rem;line-height:.95;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+
+.databand{margin:2.5rem 0 0;padding:1.1rem 0;border-top:6px solid var(--ink);border-bottom:1px solid var(--ink)}
+.databand>div{grid-column:span 3}
+.databand .k{
+  font-family:"Archivo",system-ui,sans-serif;font-variant-numeric:tabular-nums;
+  font-weight:700;font-size:2.6rem;line-height:.85;letter-spacing:-.045em;display:block;
+}
+.databand .k em{font-style:normal;color:var(--red)}
+.databand .v{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:600;font-size:.55rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--grey);display:block;margin-top:.6rem;
+}
+
+h2{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-size:.68rem;
+  letter-spacing:.22em;text-transform:uppercase;margin:5rem 0 0;padding-bottom:.65rem;
+  border-bottom:4px solid var(--ink);display:flex;justify-content:space-between;
+  align-items:baseline;gap:1rem;
+}
+h2 span{color:var(--red)}
+.note{margin:1.3rem 0 0;max-width:34rem;font-size:.95rem;font-weight:500}
+.note span{color:var(--grey);font-weight:400}
+
+/* controls */
+.field{display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;margin:1.5rem 0 0;max-width:34rem}
+.field .grow{flex:1 1 12rem}
+label.cap{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-size:.6rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--grey);display:block;margin-bottom:.35rem;
+}
+label.cap em{font-style:normal;color:var(--red)}
+input[type=text]{
+  width:100%;background:transparent;color:var(--ink);border:none;
+  border-bottom:2px solid var(--ink);padding:.4rem 0;font:inherit;font-weight:500;
+}
+input[type=text]:focus-visible{outline:none;border-bottom-color:var(--red)}
+.btn{
+  background:var(--ink);color:var(--paper);border:none;cursor:pointer;
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-size:.65rem;
+  letter-spacing:.2em;text-transform:uppercase;padding:.85rem 1.6rem;
+}
+.btn:hover{background:var(--red)}
+.btn:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.btn[disabled]{background:var(--grey);cursor:default}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.ghost:hover{background:var(--red);color:var(--paper);box-shadow:inset 0 0 0 2px var(--red)}
+
+.who{margin:1.6rem 0 0;font-weight:900;font-size:clamp(2rem,7vw,3.2rem);line-height:.9;letter-spacing:-.04em}
+.who span{color:var(--red)}
+.err{color:var(--red);font-weight:700;font-size:.85rem;margin:.8rem 0 0}
+
+/* poll */
+.poll{margin:2rem 0 0;max-width:34rem}
+.poll .q{font-weight:900;font-size:1.1rem;letter-spacing:-.02em;margin:0 0 .6rem}
+.opts{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink);transition:opacity .55s ease}
+.opts.dim{opacity:.28}
+.opts.dim:hover{opacity:1}
+.opts.dim:has(:focus-visible){opacity:1}
+.opts li{border-bottom:1px solid var(--ink)}
+.opts button{
+  width:100%;text-align:left;background:transparent;border:none;cursor:pointer;
+  font:inherit;font-weight:500;color:var(--ink);padding:.7rem .5rem;
+  display:grid;grid-template-columns:2.1rem 1fr;align-items:start;
+}
+.opts button .n{
+  font-family:"Archivo",system-ui,sans-serif;font-variant-numeric:tabular-nums;
+  font-weight:700;font-size:.72rem;color:var(--red);padding-top:.28rem;
+}
+.opts button:hover{background:rgba(224,35,26,.08)}
+.opts button[aria-pressed="true"]{background:var(--red);color:var(--paper)}
+.opts button[aria-pressed="true"] .n{color:var(--paper)}
+.opts button:focus-visible{outline:3px solid var(--red);outline-offset:-3px}
+
+/* results */
+.res{margin:1.1rem 0 0}
+.res .r{padding:.5rem 0;border-bottom:1px solid var(--ink)}
+.res .top{display:flex;justify-content:space-between;gap:1rem;font-size:.88rem;font-weight:500}
+.res .n{font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-variant-numeric:tabular-nums}
+.res .track{margin-top:.3rem;height:.5rem}
+.res .bar{height:100%;background:var(--red)}
+
+/* roster */
+.roster{margin:1.2rem 0 0;border-top:4px solid var(--ink)}
+.roster .p{padding:1rem 0;border-bottom:1px solid var(--ink)}
+.roster .nm{font-weight:900;font-size:1.1rem;letter-spacing:-.025em}
+.roster dl{margin:.45rem 0 0;display:grid;grid-template-columns:6rem 1fr;gap:.25rem .9rem;font-size:.93rem}
+.roster dt{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:600;font-size:.55rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--grey);padding-top:.4rem;
+}
+.roster dt.key{color:var(--red)}
+.roster dd{margin:0;font-weight:500}
+.roster dd.key{font-weight:700}
+.empty{color:var(--grey);padding:1.2rem 0;font-size:.92rem}
+
+/* start time */
+.setter{
+  background:var(--ink);color:var(--paper);padding:1.3rem 1.5rem;margin-top:5rem;
+  display:flex;flex-wrap:wrap;align-items:center;gap:1.2rem;
+}
+.setter label{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-size:.6rem;
+  letter-spacing:.2em;text-transform:uppercase;
+}
+.setter input{
+  font-family:"Archivo",system-ui,sans-serif;font-variant-numeric:tabular-nums;
+  font-size:1.9rem;font-weight:700;letter-spacing:-.03em;background:transparent;
+  color:var(--red);border:none;border-bottom:2px solid var(--red);padding:0;
+}
+.setter input::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.7}
+
+/* timeline */
+.block{padding:3rem 0;border-bottom:1px solid var(--ink)}
+.idx{display:block;margin-bottom:.9rem}
+.elapsed{
+  font-family:"Archivo",system-ui,sans-serif;font-variant-numeric:tabular-nums;
+  font-weight:700;font-size:3rem;line-height:.9;letter-spacing:-.04em;display:block;
+}
+.clock{
+  font-family:"Archivo",system-ui,sans-serif;font-variant-numeric:tabular-nums;
+  font-weight:700;font-size:1.35rem;letter-spacing:-.02em;color:var(--red);
+  display:block;margin-top:.4rem;min-height:1.2em;
+}
+.dur{
+  font-family:"Archivo",system-ui,sans-serif;font-weight:600;font-size:.6rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--grey);display:block;margin-top:.85rem;
+}
+.block h3{font-size:1.9rem;font-weight:900;letter-spacing:-.035em;margin:0 0 1.1rem;line-height:1.08}
+.block p{margin:0 0 .9rem;max-width:36rem}
+.block p:last-child{margin-bottom:0}
+
+.todo{list-style:none;margin:1.1rem 0 1.4rem;padding:0;max-width:34rem;border-top:1px solid var(--ink)}
+.todo li{border-bottom:1px solid var(--ink)}
+.todo label{display:flex;align-items:flex-start;gap:.9rem;padding:.7rem 0;cursor:pointer}
+.todo input{
+  appearance:none;flex:0 0 auto;width:1rem;height:1rem;margin-top:.34rem;
+  border:2px solid var(--ink);background:transparent;
+}
+.todo input:checked{background:var(--red);border-color:var(--red)}
+.todo input:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+.todo .t{font-weight:500;font-size:.98rem}
+.todo input:checked ~ .t{color:var(--grey);text-decoration:line-through}
+
+footer{
+  margin-top:6rem;padding-top:1.1rem;border-top:4px solid var(--ink);
+  font-family:"Archivo",system-ui,sans-serif;font-weight:700;font-size:.6rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--grey);
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+footer span:first-child{color:var(--red)}
+
+@media (max-width:720px){
+  .wrap{padding:0 1.15rem 4rem}
+  .hero{padding:1.75rem 0 2.25rem;grid-template-columns:1fr;gap:1.5rem}
+  .adminbar{margin:0 -1.15rem;padding:.8rem 1.15rem}
+  .mast{padding-top:2.25rem}
+  .col-time,.col-body,.headline,.panel,.databand>div{grid-column:1 / -1}
+  .databand>div{padding:.7rem 0;border-bottom:1px solid var(--ink)}
+  .databand{border-bottom:none;padding-bottom:0}
+  .databand .k{font-size:2.1rem}
+  .block .col-time{display:flex;align-items:baseline;gap:1.1rem;flex-wrap:wrap;margin-bottom:1.1rem}
+  .idx,.clock,.dur{margin:0}
+  .idx{flex-basis:100%}
+  .elapsed{font-size:2.3rem}
+  .block h3{font-size:1.6rem}
+  .roster dl{grid-template-columns:1fr}
+  .roster dt{padding-top:.5rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="adminbar" id="adminBar" hidden><span>진행자 모드</span><span>대본 표시 / 답변 삭제 가능</span></div>
+
+  <div class="hero">
+    <div class="htxt">
+      <span class="lbl">화상밋업 약속</span>
+      <p class="hname">👾 CCC<br><em>Claude Code Coffee</em></p>
+    </div>
+    <ol class="steps">
+      <li>말할 때 빼고 음소거</li>
+      <li>하고 싶은 말은 채팅에 🙋</li>
+      <li>카메라는 편하신 대로</li>
+    </ol>
+  </div>
+
+  <header class="mast">
+    <span class="lbl">[CCC-03] / 2026.09.12 SAT 20:00 / 디스코드 라운지</span>
+    <div class="row mastgrid">
+      <div class="headline">
+        <h1>화상밋업 :<br><em>클로드.. 어떻게 쓰세요?</em></h1>
+      </div>
+      <div class="panel">
+        <dl>
+          <div><dt>인원</dt><dd>16~18명</dd></div>
+          <div><dt>길이</dt><dd>120분</dd></div>
+          <div class="wide"><dt>장소</dt><dd>디스코드 라운지</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="row databand">
+      <div><span class="k">06</span><span class="v">코너</span></div>
+      <div><span class="k"><em>120</em></span><span class="v">분</span></div>
+      <div><span class="k">35</span><span class="v">분 자기소개</span></div>
+      <div><span class="k">45</span><span class="v">분 이야기</span></div>
+    </div>
+  </header>
+
+  <!-- 사전질문 -->
+  <h2>사전질문 <span id="tally">&nbsp;</span></h2>
+  <p class="note">토요일 오후 3시까지 채워주시면 미리 다 읽고 갈게요. 한 줄씩이면 충분해요.<br><span>답변은 이 페이지에서 참여자 모두에게 보입니다.</span></p>
+
+  <div id="regBox">
+    <div class="field">
+      <div class="grow">
+        <label class="cap" for="nick">닉네임</label>
+        <input type="text" id="nick" maxlength="20" placeholder="디스코드 닉네임" autocomplete="off">
+      </div>
+      <button class="btn" id="regBtn">등록</button>
+    </div>
+  </div>
+
+  <div id="meBox" hidden>
+    <p class="who"><span id="whoName"></span> 님</p>
+
+    <div class="poll">
+      <p class="q">클로드는 어디까지 써보셨어요?</p>
+      <ul class="opts" id="pollLevel"></ul>
+      <div class="res" id="resLevel" hidden></div>
+    </div>
+
+    <div class="poll">
+      <p class="q">구독은 어떤 걸로?</p>
+      <ul class="opts" id="pollPlan"></ul>
+      <div class="res" id="resPlan" hidden></div>
+    </div>
+
+    <div class="poll">
+      <p class="q">컴퓨터는?</p>
+      <ul class="opts" id="pollOs"></ul>
+      <div class="res" id="resOs" hidden></div>
+    </div>
+
+    <div class="poll">
+      <p class="q">오늘 오시는 분들이 궁금해요</p>
+      <div class="field"><div class="grow">
+        <label class="cap" for="f1">01 어떤 일 하고 계신지</label>
+        <input type="text" id="f1" maxlength="120" autocomplete="off">
+      </div></div>
+      <div class="field"><div class="grow">
+        <label class="cap" for="f2">02 요즘 클로드로 하는 일</label>
+        <input type="text" id="f2" maxlength="200" autocomplete="off">
+      </div></div>
+      <div class="field"><div class="grow">
+        <label class="cap" for="f3">03 쓰면서 막히는 것, 아쉬운 것</label>
+        <input type="text" id="f3" maxlength="200" autocomplete="off">
+      </div></div>
+      <div class="field"><div class="grow">
+        <label class="cap" for="f4">04 반복하느라 지겨운 일, 엄두가 안 났던 것 <em>제일 중요</em></label>
+        <input type="text" id="f4" maxlength="200" autocomplete="off">
+      </div></div>
+      <div class="field"><div class="grow">
+        <label class="cap" for="f5">05 밋업에서 꼭 물어보고 싶은 것 (선택)</label>
+        <input type="text" id="f5" maxlength="200" autocomplete="off">
+      </div></div>
+      <div class="field">
+        <button class="btn" id="saveBtn">제출</button>
+        <button class="btn ghost" id="resetBtn">수정</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="err" id="err" hidden></p>
+
+  <h2>모인 답변 <span id="rosterCount">&nbsp;</span></h2>
+  <div class="roster" id="roster"><p class="empty">아직 등록된 분이 없습니다.</p></div>
+
+  <!-- 진행 -->
+  <div class="setter">
+    <label for="start">시작 시각</label>
+    <input type="time" id="start" value="20:00">
+  </div>
+
+  <h2>타임라인 <span>06 코너 / 120분</span></h2>
+
+  <section class="block row" data-at="0">
+    <div class="col-time"><span class="lbl idx">01</span><span class="elapsed">00:00</span><span class="clock"></span><span class="dur">10분</span></div>
+    <div class="col-body">
+      <h3>인사 / 오늘 순서</h3>
+      <ul class="todo">
+        <li><label><input type="checkbox"><span class="t">라운지 입장, 음소거 확인</span></label></li>
+        <li><label><input type="checkbox"><span class="t">사전질문 아직이면 지금 위에서 채우기</span></label></li>
+        <li><label><input type="checkbox"><span class="t">오늘 순서와 약속 세 가지</span></label></li>
+        <li><label><input type="checkbox"><span class="t">오늘 진행 도와주실 분 소개</span></label></li>
+      </ul>
+      <div class="cue">
+        <span class="lbl">진행자 대본 / 오프닝 / 1분</span>
+        <p>반갑습니다. CCC 진행하는 Noe예요. 오늘 열여덟 분 정도 오셨어요.</p>
+        <p>오늘은 실습 없이, 서로 클로드를 어떻게 쓰고 있는지 이야기 나누는 자리예요. 앞에 한 시간은 자기소개, 쉬고 나서 고민 이야기, 마지막에 다음 실습 주제를 같이 정합니다.</p>
+        <p>인원이 많아서 세 가지만 부탁드릴게요. 말씀하실 때 말고는 음소거, 하고 싶은 말은 채팅에 손 이모지, 카메라는 편하신 대로요.</p>
+        <p>오늘 시간 체크랑 채팅 봐주실 ○○님 소개할게요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block row" data-at="10">
+    <div class="col-time"><span class="lbl idx">02</span><span class="elapsed">00:10</span><span class="clock"></span><span class="dur">35분</span></div>
+    <div class="col-body">
+      <h3>자기소개</h3>
+      <ul class="todo">
+        <li><label><input type="checkbox"><span class="t">한 분당 2분, 이름이 불리면 음소거 풀기</span></label></li>
+        <li><label><input type="checkbox"><span class="t">닉네임 / 하는 일 / 자동화하고 싶은 일</span></label></li>
+        <li><label><input type="checkbox"><span class="t">나머지는 「모인 답변」에 있으니 넘어가도 괜찮아요</span></label></li>
+        <li><label><input type="checkbox"><span class="t">1분 30초 지나면 채팅에 ⏰</span></label></li>
+      </ul>
+      <p>사전질문에 써주신 건 미리 다 읽었어요. <strong>자동화하고 싶은 일</strong> 위주로 말씀해주세요.</p>
+      <div class="cue">
+        <span class="lbl">진행자 대본 / 호명</span>
+        <p class="stage">(순서는 등록순 말고 비슷한 고민끼리 이어서)</p>
+        <p>○○님은 엑셀 보고서 이야기 써주셨던데, 조금 더 들려주세요.</p>
+        <p class="stage">(한 분 끝나면)</p>
+        <p>비슷한 거 쓰신 △△님, 이어서 부탁드려요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block row" data-at="45">
+    <div class="col-time"><span class="lbl idx">03</span><span class="elapsed">00:45</span><span class="clock"></span><span class="dur">10분</span></div>
+    <div class="col-body">
+      <h3>쉬는 시간</h3>
+      <ul class="todo">
+        <li><label><input type="checkbox"><span class="t">마이크, 카메라 끄고 편하게</span></label></li>
+        <li><label><input type="checkbox"><span class="t">「모인 답변」 둘러보면서 나랑 비슷한 고민 찾아보기</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block row" data-at="55">
+    <div class="col-time"><span class="lbl idx">04</span><span class="elapsed">00:55</span><span class="clock"></span><span class="dur">45분</span></div>
+    <div class="col-body">
+      <h3>주제별 이야기</h3>
+      <ul class="todo">
+        <li><label><input type="checkbox"><span class="t">모인 답변에서 겹치는 고민을 주제 3개로 묶어서</span></label></li>
+        <li><label><input type="checkbox"><span class="t">주제당 15분, 해당하는 분 2, 3명이 고민 이야기</span></label></li>
+        <li><label><input type="checkbox"><span class="t">비슷한 경험 있으면 채팅에 🙋</span></label></li>
+        <li><label><input type="checkbox"><span class="t">못 다룬 개인 질문은 #질문-정보에</span></label></li>
+      </ul>
+      <p>간단하거나 바로 알려드릴 수 있는 건 그 자리에서, 큰 건 <strong>작업 설계 방향</strong>을 같이 잡아봐요.</p>
+      <div class="cue">
+        <span class="lbl">진행자 대본 / 주제 넘길 때</span>
+        <p>이 주제는 여기까지 할게요. 더 이야기하고 싶으신 건 #질문-정보에 남겨주시면 제가 답 드릴게요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block row" data-at="100">
+    <div class="col-time"><span class="lbl idx">05</span><span class="elapsed">01:40</span><span class="clock"></span><span class="dur">15분</span></div>
+    <div class="col-body">
+      <h3>다음 실습 정하기</h3>
+      <ul class="todo">
+        <li><label><input type="checkbox"><span class="t">오늘 나온 이야기로 실습 후보 3개</span></label></li>
+        <li><label><input type="checkbox"><span class="t">#일반 채널 투표, 월요일까지</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block row" data-at="115">
+    <div class="col-time"><span class="lbl idx">06</span><span class="elapsed">01:55</span><span class="clock"></span><span class="dur">5분</span></div>
+    <div class="col-body">
+      <h3>마무리</h3>
+      <ul class="todo">
+        <li><label><input type="checkbox"><span class="t">다음 모임 일정 안내</span></label></li>
+        <li><label><input type="checkbox"><span class="t">만든 게 있으면 #클로드-활용예에 올려주세요</span></label></li>
+        <li><label><input type="checkbox"><span class="t">단체 스크린샷, 카메라 켤 수 있는 분만</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <span>👾 CCC : Claude Code Coffee</span>
+    <span>2026.09.12 SAT / 디스코드 라운지</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var API = 'https://tfztokwsttuumarjmayi.supabase.co/rest/v1/ccc3_responses';
+var KEY = 'sb_publishable_-gkhxpAM1xf4L1XMfBf_qQ_oHcYKgq3';
+var H = { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' };
+
+var LEVELS = ['아직 안 써봤어요','웹에서 채팅으로만 (지피티처럼)','파일 올리거나 이것저것 시켜봐요','클로드 코드 설치해서 써봤어요','클로드 코드 곧잘 써요'];
+var PLANS  = ['무료','Pro','Max','모르겠어요'];
+var OSES   = ['맥','윈도우','둘 다'];
+var TEXTS  = { f1:'work', f2:'usage', f3:'stuck', f4:'want', f5:'ask' };
+
+var $ = function(id){ return document.getElementById(id); };
+var ADMIN = /[?&]admin\b/.test(location.search)
+         || location.hash === '#admin'
+         || /\/admin\/?$/.test(location.pathname);
+var me = { id:null, nickname:'', level:null, plan:null, os:null, work:'', usage:'', stuck:'', want:'', ask:'' };
+var rows = [];
+
+// ccc-01, 02와 같은 도메인이라 저장 키가 섞이지 않게 ccc3. 으로 시작
+function ls(k,v){ try{ return v===undefined ? localStorage.getItem('ccc3.'+k) : localStorage.setItem('ccc3.'+k,v); }catch(e){ return null; } }
+function uid(){
+  try{ if(crypto && crypto.randomUUID) return crypto.randomUUID(); }catch(e){}
+  return 'x' + Math.floor(Math.random()*1e9).toString(36) + Date.now().toString(36);
+}
+function esc(t){
+  return String(t==null?'':t).replace(/[&<>"']/g, function(c){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+  });
+}
+function fail(msg){ var e=$('err'); e.textContent = msg; e.hidden = false; }
+function ok(){ $('err').hidden = true; }
+
+/* 서버 */
+// 저장을 한 줄로 세움. 투표를 연달아 누르면 먼저 보낸 요청이 늦게 도착해 최신 답을 덮어쓰기 때문
+var queue = Promise.resolve();
+function save(){ queue = queue.then(send); return queue; }
+function send(){
+  var body = [{ id:me.id, nickname:me.nickname, level:me.level, plan:me.plan, os:me.os,
+                work:me.work, usage:me.usage, stuck:me.stuck, want:me.want, ask:me.ask,
+                updated_at:new Date().toISOString() }];
+  return fetch(API, {
+    method:'POST',
+    headers:Object.assign({}, H, { Prefer:'resolution=merge-duplicates,return=minimal' }),
+    body:JSON.stringify(body)
+  }).then(function(r){
+    if(!r.ok) throw new Error('저장 실패 ' + r.status);
+    ok(); return load();
+  }).catch(function(e){ fail('저장이 안 됐어요. ' + e.message); });
+}
+
+function load(){
+  return fetch(API + '?select=*&order=updated_at.asc', { headers:H })
+    .then(function(r){ if(!r.ok) throw new Error('불러오기 실패 ' + r.status); return r.json(); })
+    .then(function(d){ rows = d || []; ok(); render(); })
+    .catch(function(e){ fail('결과를 못 불러왔어요. ' + e.message); });
+}
+
+function remove(id, nickname){
+  if(!window.confirm('「' + nickname + '」 답변을 삭제할까요?')) return;
+  fetch(API + '?id=eq.' + encodeURIComponent(id), { method:'DELETE', headers:H })
+    .then(function(r){ if(!r.ok) throw new Error('삭제 실패 ' + r.status); ok(); return load(); })
+    .catch(function(e){ fail(e.message); });
+}
+
+/* 그리기 */
+var dimT = {};
+function scheduleDim(el, key, now){
+  clearTimeout(dimT[key]);
+  el.classList.remove('dim');
+  if(me[key] == null) return;
+  if(now){ el.classList.add('dim'); return; }
+  dimT[key] = setTimeout(function(){ el.classList.add('dim'); }, 2000);
+}
+
+function buildPoll(el, opts, key){
+  el.innerHTML = '';
+  opts.forEach(function(txt, i){
+    var v = i + 1;
+    var li = document.createElement('li');
+    var b  = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-pressed', me[key] === v ? 'true' : 'false');
+    b.innerHTML = '<span class="n">' + ('0'+v) + '</span><span>' + esc(txt) + '</span>';
+    b.addEventListener('click', function(){
+      me[key] = v;
+      buildPoll(el, opts, key);
+      scheduleDim(el, key, false);
+      save();
+    });
+    li.appendChild(b); el.appendChild(li);
+  });
+}
+
+function drawRes(el, opts, key){
+  if(me[key] == null){ el.hidden = true; return; }
+  el.hidden = false;
+  var counts = opts.map(function(_, i){
+    return rows.filter(function(r){ return r[key] === i + 1; }).length;
+  });
+  var total = counts.reduce(function(a,b){ return a+b; }, 0) || 1;
+  el.innerHTML = counts.map(function(c, i){
+    var pct = Math.round(c / total * 100);
+    return '<div class="r"><div class="top"><span>' + esc(opts[i]) + '</span>' +
+           '<span class="n">' + c + '명 / ' + pct + '%</span></div>' +
+           '<div class="track"><div class="bar" style="width:' + pct + '%"></div></div></div>';
+  }).join('');
+}
+
+function line(label, val, key){
+  if(!val) return '';
+  var k = key ? ' class="key"' : '';
+  return '<dt' + k + '>' + label + '</dt><dd' + k + '>' + esc(val) + '</dd>';
+}
+
+function drawRoster(){
+  $('rosterCount').textContent = rows.length + '명';
+  $('tally').textContent = rows.length + '명 참여';
+  if(!rows.length){ $('roster').innerHTML = '<p class="empty">아직 등록된 분이 없습니다.</p>'; return; }
+  $('roster').innerHTML = rows.map(function(r){
+    var tags = [r.level && LEVELS[r.level-1], r.plan && PLANS[r.plan-1], r.os && OSES[r.os-1]]
+                 .filter(Boolean).join(' / ');
+    return '<div class="p"><div class="nm">' + esc(r.nickname) + '</div><dl>' +
+      line('수준', tags) +
+      line('하는 일', r.work) +
+      line('클로드로', r.usage) +
+      line('막히는 것', r.stuck) +
+      line('하고 싶은 것', r.want, true) +
+      line('질문', r.ask) +
+      '</dl>' +
+      (ADMIN ? '<button class="del" data-id="' + esc(r.id) + '" data-nm="' + esc(r.nickname) + '">삭제</button>' : '') +
+      '</div>';
+  }).join('');
+  if(ADMIN){
+    [].slice.call($('roster').querySelectorAll('.del')).forEach(function(b){
+      b.addEventListener('click', function(){ remove(b.dataset.id, b.dataset.nm); });
+    });
+  }
+}
+
+function render(){
+  drawRes($('resLevel'), LEVELS, 'level');
+  drawRes($('resPlan'),  PLANS,  'plan');
+  drawRes($('resOs'),    OSES,   'os');
+  drawRoster();
+}
+
+/* 등록 */
+function polls(now){
+  buildPoll($('pollLevel'), LEVELS, 'level');
+  buildPoll($('pollPlan'),  PLANS,  'plan');
+  buildPoll($('pollOs'),    OSES,   'os');
+  scheduleDim($('pollLevel'), 'level', now);
+  scheduleDim($('pollPlan'),  'plan',  now);
+  scheduleDim($('pollOs'),    'os',    now);
+}
+
+function enter(){
+  $('regBox').hidden = true;
+  $('meBox').hidden = false;
+  $('whoName').textContent = me.nickname;
+  polls(true);
+  Object.keys(TEXTS).forEach(function(f){ $(f).value = me[TEXTS[f]] || ''; });
+}
+
+$('regBtn').addEventListener('click', function(){
+  var v = $('nick').value.trim();
+  if(!v){ $('nick').focus(); return; }
+  me.id = ls('id') || uid();
+  me.nickname = v;
+  ls('id', me.id); ls('nick', v);
+  enter(); save();
+});
+$('nick').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('regBtn').click(); });
+
+$('saveBtn').addEventListener('click', function(){
+  Object.keys(TEXTS).forEach(function(f){ me[TEXTS[f]] = $(f).value.trim(); });
+  var b = $('saveBtn'); b.disabled = true; b.textContent = '제출 중';
+  save().then(function(){ b.disabled = false; b.textContent = '제출됨'; setTimeout(function(){ b.textContent='제출'; }, 1500); });
+});
+
+$('resetBtn').addEventListener('click', function(){
+  if(!window.confirm('투표와 답변을 모두 지우고 다시 하시겠어요?')) return;
+  me.level = null; me.plan = null; me.os = null;
+  Object.keys(TEXTS).forEach(function(f){ me[TEXTS[f]] = ''; $(f).value = ''; });
+  polls(true);
+  $('resLevel').hidden = true; $('resPlan').hidden = true; $('resOs').hidden = true;
+  save();
+});
+
+/* 시작 시각 */
+(function(){
+  var input = $('start');
+  var blocks = [].slice.call(document.querySelectorAll('.block'));
+  function pad(n){ return (n<10?'0':'') + n; }
+  function draw(){
+    var v = input.value;
+    if(!v){ blocks.forEach(function(b){ b.querySelector('.clock').textContent=''; }); return; }
+    var p = v.split(':'), base = parseInt(p[0],10)*60 + parseInt(p[1],10);
+    blocks.forEach(function(b){
+      var t = (base + parseInt(b.dataset.at,10)) % 1440;
+      b.querySelector('.clock').textContent = pad(Math.floor(t/60)) + ':' + pad(t%60);
+    });
+    ls('start', v);
+  }
+  var s = ls('start'); if(s) input.value = s;
+  input.addEventListener('input', draw);
+  draw();
+})();
+
+/* 체크리스트 */
+[].slice.call(document.querySelectorAll('.todo input')).forEach(function(box, i){
+  if(ls('todo.' + i) === '1') box.checked = true;
+  box.addEventListener('change', function(){ ls('todo.' + i, box.checked ? '1' : '0'); });
+});
+
+/* 부팅 */
+if(ADMIN){ document.body.classList.add('admin'); $('adminBar').hidden = false; }
+me.id = ls('id');
+var savedNick = ls('nick');
+if(me.id && savedNick){
+  me.nickname = savedNick;
+  load().then(function(){
+    var mine = rows.filter(function(r){ return r.id === me.id; })[0];
+    if(mine){ ['level','plan','os','work','usage','stuck','want','ask'].forEach(function(k){ me[k] = mine[k]; }); }
+    enter(); render();
+  });
+} else {
+  load();
+}
+setInterval(load, 5000);
+})();
+</script>
+</body>
+</html>
