@@ -170,6 +170,8 @@ h2 span{color:var(--red)}
 body.admin .sum .host{display:block}
 .miss{margin:.8rem 0 0;font-size:.85rem;color:var(--grey)}
 .miss b{font-weight:700;color:var(--ink)}
+.miss.noshow{margin:1.2rem 0 .4rem;font-size:.93rem}
+.miss.noshow b{color:var(--red)}
 
 /* 플로팅 : 사전답변이 화면 밖일 때만 */
 .fab{
@@ -305,6 +307,7 @@ footer span:first-child{color:var(--red)}
     <button type="button" data-tab="q" aria-pressed="false">질문별</button>
   </div>
   <p class="err" id="err" hidden></p>
+  <p class="miss noshow" id="noshow" hidden></p>
   <div class="roster" id="roster"><p class="empty">아직 등록된 분이 없습니다.</p></div>
   <div class="byq" id="byq" hidden></div>
   </div>
@@ -572,6 +575,17 @@ function missHtml(key){
   return '<p class="miss"><b>미응답 ' + names.length + '명</b> : ' + names.join(', ') + '</p>';
 }
 
+/* 당근 참여 명단 20명. 답변이 들어오면 미답변에서 자동으로 빠짐 */
+var ROSTER = ['Noe','비비','엘.','고양이의숲','당근당근','마음','앨리스','당긍','미니미니','풀잎',
+              '흐발라','뭉이','치트','Ni','안녕 클로드','콩이별이맘','피너츠','Min','파니핑크','달덩이마마'];
+function drawNoshow(){
+  var done = {}; rows.forEach(function(r){ done[r.nickname] = 1; });
+  var names = ROSTER.filter(function(n){ return n !== 'Noe' && !done[n]; });
+  var el = $('noshow');
+  el.hidden = !names.length;
+  el.innerHTML = '<b>미답변 ' + names.length + '명</b> : ' + names.map(esc).join(', ');
+}
+
 var POLLS = [['클로드는 어디까지', LEVELS, 'level'], ['구독', PLANS, 'plan'], ['컴퓨터', OSES, 'os']];
 var TEXTS = [['하는 일','work'], ['요즘 클로드로 하는 일','usage'], ['막히는 것, 아쉬운 것','stuck'],
              ['반복하느라 지겨운 일, 엄두가 안 났던 것','want',true], ['밋업에서 물어보고 싶은 것','ask']];
@@ -591,7 +605,8 @@ function drawByQ(){
 }
 
 function render(){
-  $('rosterCount').textContent = rows.length + '명';
+  $('rosterCount').textContent = rows.length + ' / ' + (ROSTER.length - 1) + '명';
+  drawNoshow();
   drawRoster();
   drawByQ();
 }
